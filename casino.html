@@ -8,46 +8,81 @@
 
 <body>
 <h1>Oooooh!</h1>
-<h2>Queres tentar a tua sorte?</h2>
+<h2>Queres tentar a tua sorte?♠</h2>
 
 <button onclick="sorte()">spin the whell</button>
 <button onclick="stop()">PARAAAAAAA</button>
 
 <p>
-<span id = "n1" class ="bignumber"></span>
-<span id = "n2" class ="bignumber"></span>
-<span id = "n3" class ="bignumber"></span>
+<span id = "dn1" class ="bignumber"></span>
+<span id = "dn2" class ="bignumber"></span>
+<span id = "dn3" class ="bignumber"></span>
 </p>
 
-</body>
-
+<p>
+<span id = "n1" class ="text"></span>
+</p>
 <script>
-const n1 = document.getElementById('n1') 
-const n2 = document.getElementById('n2') 
-const n3 = document.getElementById('n3') 
-let timer
+const dn1 = document.getElementById('dn1') 
+const dn2 = document.getElementById('dn2') 
+const dn3 = document.getElementById('dn3') 
+let myTimer
 let timeout = 0
+
+let n1, n2, n3
 
 function sorte() {
         const n1 = Math.round(Math.random() * 9)
         const n2 = Math.round(Math.random() * 9)
         const n3 = Math.round(Math.random() * 9)
     
-        n1.innerHTML = n1
-        n1.innerHTML = n1
-        n1.innerHTML = n1
+        dn1.innerHTML = n1
+        dn2.innerHTML = n2
+        dn3.innerHTML = n3
         timeout = timeout + 25
 
         if (timeout < 500) {
         timer = setTimeout(sorte, timeout)
-} else {
+} 
+else {
     stop()
+    if (n1 == n2 && n2 == n3){
+        alert ("ganso")
+
     }
+   
+   
+    else {
+        alert ("pato")
+    }
+    }
+    
 }
 
-~function para() {
+~function stop() {
     cleartimeout(timer)
+    timeout = 0
 }
+
+
 </script>
+<a href="index.html"><img src="https://marcelosantosarte.com.br/wp-content/uploads/Produtos/Preview/Pintura/10-19-19-Preview-Flores-Aquarela.jpg"></a>
+
+<style>
+    .bignumber {
+        font-family: 'digital-clock-font';
+        font-size: xx-large;
+        letter-spacing: lem;
+    }
+    @font-face {
+        font-family: 'digital-clock-font';
+        src: url('clock.ttf')
+    }
+
+</style>
+
+</body>
 
 </html>
+<Table>:P</Table>
+
