@@ -1,0 +1,17 @@
+body {
+    background-color: rgb(235, 224, 131);
+}
+
+h1 {
+    color: rgb(99, 62, 23)  
+}
+
+.centered-text {
+    text-align: center;
+}
+
+canvas {
+    border: solid 1px black;
+    display: block;
+    margin: auto;
+}
