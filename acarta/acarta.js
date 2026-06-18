@@ -1,42 +1,61 @@
-// objetos da página
+const loading = document.getElementById("loading")
 const mycanvas = document.getElementById("mycanvas")
 const ctx = mycanvas.getContext("2d")
-const progressMeter = document.getElementById("loaderProgress")
 
-// configurações do jogo
-const fundosCenarios = [
-    "acarta/imagens/casa2.png",
-    "acarta/imagens/casa.png",
-    "acarta/imagens/casa2.png",
-    "acarta/imagens/casa2.png",
-]
-const cenarios = [
-]
-const floor = 423
-const mario = {
-    image: null
+const scenes = {
+    casa: {
+        id: 'casa',
+        sprite: "acarta/imagens/casa2.png",
+        image: null
+    },
+    casa2: {
+        id: 'casa2',
+        sprite: "acarta/imagens/casa2.png",
+        image: null
+    }
+}
+const actors = {
+    mickey: {
+        sprite: "/acarta/imagens/supermario.png",
+        image: null
+    }
 }
 
-// inicializar o jogo
-loadGame().then( () => {
-    console.log(cenarios)
-    let sceneId = 0
-    loadScene(sceneId)
-})
-initMainActor()
+async function inicializar() {
+    // init scenes
+    scenes.casa.image = new Image()
+    scenes.casa.image.src = scenes.casa.sprite
+    await scenes.casa.image.decode()
+    scenes.casa2.image = new Image()
+    scenes.casa2.image.src = scenes.casa2.sprite
+    await scenes.casa2.image.decode()
+    // init actors
+    actors.mickey.image = new Image()
+    actors.mickey.image.src = actors.mickey.sprite
+    await actors.mickey.image.decode() 
+    loading.style.display = "none"
+    mycanvas.style.display = "block"
+}
 
-// eventos
+async function loadSceneByKey(key) {
+    const scene = scenes[Object.keys(scenes)[sceneKey]]
+    await loadScene(scene) 
+}
+async function loadScene(scene) {
+    ctx.drawImage(scene.image, 0, 0)
+}
+
 addEventListener("keyup", (ev) => {
     console.log(ev.code)
     
     if (ev.code === "ArrowRight") {
-        if (sceneId < 3) sceneId = sceneId + 1
+        if (sceneKey < 2) sceneKey = sceneKey + 1
     }
     else if (ev.code === "ArrowLeft") {
-        if (sceneId > 0) sceneId = sceneId -1
+        if (sceneKey > 0) sceneKey = sceneKey -1
     }
 
-    loadScene(sceneId)
+    loadSceneByKey(sceneKey)
 })
 
 mycanvas.addEventListener("click", (ev) => {
@@ -44,43 +63,18 @@ mycanvas.addEventListener("click", (ev) => {
     const x = ev.clientX - bound.left
     const y = ev.clientY - bound.top
     console.log(x + " x " + y)
-    ctx.drawImage(mario.image, x, y)
-})
-/////////////////////////////////////////////////
-
-async function loadGame() {
-    // inicializa cenários
-    fundosCenarios.forEach(url => {
-        const cenario = {
-            image: new Image()
-        }
-        cenario.image.src = url
-        cenario.image.onload = () => {
-            cenarios.push(cenario)
-            progressMeter.value += 0.1
-        }
-    }); 
-
-    // inicializa atores
-    mario.image = new Image()
-    mario.image.src = "/acarta/imagens/supermario.png"
-    mario.image.onload = () => {
-        progressMeter.value = 1
-    }
-}
-
-/**
- * inicializa o cenário pretendido
- * @param {int} id 
- */
-function loadScene(id) {
-    console.log(cenarios[id].image)
-    ctx.drawImage(cenarios[id].image, 0, 0)
-}
-
-function initMainActor() {
     
-}
+    loadSceneByKey(sceneKey)
+    ctx.drawImage(actors.mickey.image, x, y)
+})
+
+
+let sceneKey = 0
+inicializar().then( () => {
+    console.log("carregar fundo")
+    loadSceneByKey(sceneKey)
+})
+
 
 
 function hitbox() {
