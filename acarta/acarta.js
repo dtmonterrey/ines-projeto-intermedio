@@ -1,6 +1,7 @@
 const loading = document.getElementById("loading")
 const mycanvas = document.getElementById("mycanvas")
 const ctx = mycanvas.getContext("2d")
+const floor = 440;
 
 const scenes = {
     casa: {
@@ -10,18 +11,21 @@ const scenes = {
     },
     casa2: {
         id: 'casa2',
-        sprite: "acarta/imagens/casa2.png",
+        sprite: "acarta/imagens/casa.png",
         image: null
     }
 }
 const actors = {
-    mickey: {
+    mario: {
         sprite: "/acarta/imagens/supermario.png",
-        image: null
+        image: null,
+        scenePos: 0,
+        x: 0,
     }
 }
 
 async function inicializar() {
+    const bound = mycanvas.getBoundingClientRect() 
     // init scenes
     scenes.casa.image = new Image()
     scenes.casa.image.src = scenes.casa.sprite
@@ -30,9 +34,10 @@ async function inicializar() {
     scenes.casa2.image.src = scenes.casa2.sprite
     await scenes.casa2.image.decode()
     // init actors
-    actors.mickey.image = new Image()
-    actors.mickey.image.src = actors.mickey.sprite
-    await actors.mickey.image.decode() 
+    actors.mario.image = new Image()
+    actors.mario.image.src = actors.mario.sprite
+    await actors.mario.image.decode() 
+    actors.mario.scenePos = bound.width / 2 - actors.mario.image.width / 2  // initial position middle of scene
     loading.style.display = "none"
     mycanvas.style.display = "block"
 }
@@ -45,34 +50,42 @@ async function loadScene(scene) {
     ctx.drawImage(scene.image, 0, 0)
 }
 
-addEventListener("keyup", (ev) => {
-    console.log(ev.code)
-    
-    if (ev.code === "ArrowRight") {
-        if (sceneKey < 2) sceneKey = sceneKey + 1
-    }
-    else if (ev.code === "ArrowLeft") {
-        if (sceneKey > 0) sceneKey = sceneKey -1
-    }
-
+async function actorToScene(actor) {
+    actorTo(actor, actor.scenePos)
+}
+async function actorTo(actor, x) {
+    // update actor current position
+    actor.x = x
+    // update scene
+    const y = floor - actors.mario.image.height
     loadSceneByKey(sceneKey)
-})
+    ctx.drawImage(actor.image, x, y)
+}
+
+async function actorMoveTo(actor, x) {
+    while (actor.x !== x) {
+        let newpos = -1 
+        if (actor.x > x) {
+            newpos = (actor.x - x) / 2 + x
+        } else {
+            newpos = actor, (x - actor.x) / 2 + actor.x
+        }
+        console.log(newpos)
+        await actorTo(actor, newpos)
+        await delay(500)
+    }
+}
 
 mycanvas.addEventListener("click", (ev) => {
     const bound = mycanvas.getBoundingClientRect() 
     const x = ev.clientX - bound.left
-    const y = ev.clientY - bound.top
-    console.log(x + " x " + y)
-    
-    loadSceneByKey(sceneKey)
-    ctx.drawImage(actors.mickey.image, x, y)
+    actorMoveTo(actors.mario, x)
 })
-
 
 let sceneKey = 0
 inicializar().then( () => {
     console.log("carregar fundo")
-    loadSceneByKey(sceneKey)
+    actorToScene(actors.mario)
 })
 
 
