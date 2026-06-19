@@ -3,6 +3,13 @@ const mycanvas = document.getElementById("mycanvas")
 const ctx = mycanvas.getContext("2d")
 const floor = 440;
 
+const stage = {
+    scene: null,
+    actors: [
+
+    ]
+}
+
 const scenes = {
     casa: {
         id: 'casa',
@@ -82,10 +89,22 @@ mycanvas.addEventListener("click", (ev) => {
     actorMoveTo(actors.mario, x)
 })
 
+function renderStage() {
+    
+}
+
+function loop() {
+   console.log('loop: ' + Date.now()) 
+   // render stage
+   // update actors
+   setTimeout(loop, 1000)
+}
+
 let sceneKey = 0
 inicializar().then( () => {
-    console.log("carregar fundo")
+    console.log("Loading...")
     actorToScene(actors.mario)
+    loop() 
 })
 
 
