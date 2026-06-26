@@ -211,6 +211,7 @@ mycanvas.addEventListener("click", (ev) => {
     }    
 })
 
+/** renderiza o palco */
 function renderStage() {
     // console.log('rendering scene: ' + stage.scene.id)
     ctx.drawImage(stage.scene.image, 0, 0)
