@@ -97,29 +97,29 @@ const actors = {
         id: 'barbara',
         sprite: "/acarta/imagens/barbara2.png",
         image: null,
-        x: 0,
-        y: 0,
+        x: 200,
+        y: 300,
     },
     boneca: {
         id: 'boneca',
         sprite: "/acarta/imagens/boneca2.png",
         image: null,
-        x: 0,
-        y: 0,
+        x: 200,
+        y: 300,
     },
     felix: {
         id: 'felix',
         sprite: "/acarta/imagens/felix2.png",
         image: null,
-        x: 0,
-        y: 0,
+        x: 200,
+        y: 300,
     },
     hugo: {
         id: 'hugo',
         sprite: "/acarta/imagens/hugo2.png",
         image: null,
-        x: 0,
-        y: 0,
+        x: 200,
+        y: 300,
     },
 }
 
@@ -130,6 +130,7 @@ async function inicializar() {
     scenes.casa.image.src = scenes.casa.sprite
     scenes.casa.left = scenes.escola
     scenes.casa.right = scenes.quarto
+    scenes.casa.actors = [actors.barbara] 
     await scenes.casa.image.decode()
     loading.innerHTML = 'A carregar 10%'
     progress.value = .1 
@@ -137,12 +138,14 @@ async function inicializar() {
     scenes.quarto.image.src = scenes.quarto.sprite
     scenes.quarto.left = scenes.casa
     scenes.quarto.right = scenes.cave
+    scenes.quarto.actors = [actors.boneca] 
     await scenes.quarto.image.decode()
     loading.innerHTML = 'A carregar 20%'
     progress.value = .2 
     scenes.cave.image = new Image()
     scenes.cave.image.src = scenes.cave.sprite
     scenes.cave.left = scenes.casa
+    scenes.cave.actors = [actors.felix] 
     await scenes.cave.image.decode()
     loading.innerHTML = 'A carregar 30%'
     progress.value = .3 
@@ -150,12 +153,14 @@ async function inicializar() {
     scenes.escola.image.src = scenes.escola.sprite
     scenes.escola.left = scenes.biblioteca
     scenes.escola.right = scenes.casa
+    scenes.escola.actors = [actors.hugo] 
     await scenes.escola.image.decode()
     loading.innerHTML = 'A carregar 40%'
     progress.value = .4 
     scenes.biblioteca.image = new Image()
     scenes.biblioteca.image.src = scenes.biblioteca.sprite
     scenes.biblioteca.right = scenes.escola
+    scenes.biblioteca.actors = [actors.barbara] 
     await scenes.biblioteca.image.decode()
     loading.innerHTML = 'A carregar 50%'
     progress.value = .5 
@@ -209,10 +214,13 @@ mycanvas.addEventListener("click", (ev) => {
 function renderStage() {
     // console.log('rendering scene: ' + stage.scene.id)
     ctx.drawImage(stage.scene.image, 0, 0)
-    stage.actors.forEach( (actor) => {
+    // render secondary actors for scene
+    stage.scene.actors.forEach( (actor) => {
         // console.log('rendering actor ' + actor.id + ` at (${actor.x}, ${actor.y}) goto ` + (actor.goto ? `(${actor.goto.x}, ${actor.goto.y})` : 'false')) 
         ctx.drawImage(actor.image, actor.x, actor.y)
     }) 
+    // render main actor
+    ctx.drawImage(actors.mario.image, actors.mario.x, actors.mario.y)
 }
 
 function loop() {
