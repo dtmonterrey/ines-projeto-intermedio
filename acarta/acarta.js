@@ -1,6 +1,7 @@
 import globals from './globals.js'
 
 const loading = document.getElementById("loading")
+const progress = document.getElementById("progress")
 const mycanvas = globals.canvas
 const ctx = globals.ctx
 const step_distance = globals.step_distance
@@ -17,6 +18,15 @@ const scenes = {
         image: null,
         left: false,
         right: false,
+        actors: [],
+    },
+    quarto: {
+        id: 'quarto',
+        sprite: "acarta/imagens/quarto2.png",
+        image: null,
+        left: false,
+        right: false,
+        actors: [],
     },
     cave: {
         id: 'cave',
@@ -24,6 +34,7 @@ const scenes = {
         image: null,
         left: false,
         right: false,
+        actors: [],
     },
     escola: {
         id: 'escola',
@@ -31,6 +42,7 @@ const scenes = {
         image: null,
         left: false,
         right: false,
+        actors: [],
     },
     biblioteca: {
         id: 'biblioteca',
@@ -38,6 +50,7 @@ const scenes = {
         image: null,
         left: false,
         right: false,
+        actors: [],
     },
 }
 const actors = {
@@ -79,7 +92,35 @@ const actors = {
                 actors.mario.goto = false
             } 
         }
-    }
+    },
+    barbara: {
+        id: 'barbara',
+        sprite: "/acarta/imagens/barbara2.png",
+        image: null,
+        x: 0,
+        y: 0,
+    },
+    boneca: {
+        id: 'boneca',
+        sprite: "/acarta/imagens/boneca2.png",
+        image: null,
+        x: 0,
+        y: 0,
+    },
+    felix: {
+        id: 'felix',
+        sprite: "/acarta/imagens/felix2.png",
+        image: null,
+        x: 0,
+        y: 0,
+    },
+    hugo: {
+        id: 'hugo',
+        sprite: "/acarta/imagens/hugo2.png",
+        image: null,
+        x: 0,
+        y: 0,
+    },
 }
 
 async function inicializar() {
@@ -88,65 +129,74 @@ async function inicializar() {
     scenes.casa.image = new Image()
     scenes.casa.image.src = scenes.casa.sprite
     scenes.casa.left = scenes.escola
-    scenes.casa.right = scenes.cave
+    scenes.casa.right = scenes.quarto
     await scenes.casa.image.decode()
+    loading.innerHTML = 'A carregar 10%'
+    progress.value = .1 
+    scenes.quarto.image = new Image()
+    scenes.quarto.image.src = scenes.quarto.sprite
+    scenes.quarto.left = scenes.casa
+    scenes.quarto.right = scenes.cave
+    await scenes.quarto.image.decode()
+    loading.innerHTML = 'A carregar 20%'
+    progress.value = .2 
     scenes.cave.image = new Image()
     scenes.cave.image.src = scenes.cave.sprite
     scenes.cave.left = scenes.casa
     await scenes.cave.image.decode()
+    loading.innerHTML = 'A carregar 30%'
+    progress.value = .3 
     scenes.escola.image = new Image()
     scenes.escola.image.src = scenes.escola.sprite
     scenes.escola.left = scenes.biblioteca
     scenes.escola.right = scenes.casa
     await scenes.escola.image.decode()
+    loading.innerHTML = 'A carregar 40%'
+    progress.value = .4 
     scenes.biblioteca.image = new Image()
     scenes.biblioteca.image.src = scenes.biblioteca.sprite
     scenes.biblioteca.right = scenes.escola
     await scenes.biblioteca.image.decode()
+    loading.innerHTML = 'A carregar 50%'
+    progress.value = .5 
     // init actors
     actors.mario.image = new Image()
     actors.mario.image.src = actors.mario.sprite
     await actors.mario.image.decode() 
+    loading.innerHTML = 'A carregar 60%'
+    progress.value = .6 
     actors.mario.x = bound.width / 2 - actors.mario.image.width / 2  // initial position middle of scene
     actors.mario.sety(floor)
+    actors.barbara.image = new Image()
+    actors.barbara.image.src = actors.barbara.sprite
+    await actors.barbara.image.decode() 
+    loading.innerHTML = 'A carregar 70%'
+    progress.value = .7 
+    actors.boneca.image = new Image()
+    actors.boneca.image.src = actors.boneca.sprite
+    await actors.boneca.image.decode() 
+    loading.innerHTML = 'A carregar 80%'
+    progress.value = .8 
+    actors.felix.image = new Image()
+    actors.felix.image.src = actors.felix.sprite
+    await actors.felix.image.decode() 
+    loading.innerHTML = 'A carregar 90%'
+    progress.value = .9 
+    actors.hugo.image = new Image()
+    actors.hugo.image.src = actors.hugo.sprite
+    await actors.hugo.image.decode() 
+    loading.innerHTML = 'A carregar 100%'
+    progress.value = 1
+    
+    // finish
     stage.scene = scenes.casa
     stage.actors.push(actors.mario)
     renderStage() 
     loading.style.display = "none"
+    progress.style.display = "none"
     mycanvas.style.display = "block"
 }
 
-async function loadSceneByKey(key) {
-    const scene = scenes[Object.keys(scenes)[sceneKey]]
-    await loadScene(scene) 
-}
-async function loadScene(scene) {
-    ctx.drawImage(scene.image, 0, 0)
-}
-
-async function actorToScene(actor) {
-    actorTo(actor, actor.scenePos)
-}
-async function actorTo(actor, x) {
-    // update actor current position
-    actor.x = x
-    // update scene
-    const y = floor - actors.mario.image.height
-    loadSceneByKey(sceneKey)
-    ctx.drawImage(actor.image, x, y)
-}
-
-async function actorMoveTo(actor, x) {
-    while (actor.x !== x) {
-        let newpos = -1 
-        if (actor.x > x) {
-            newpos = (actor.x - x) / 2 + x
-        } else {
-            newpos = actor, (x - actor.x) / 2 + actor.x
-        }
-        await actorTo(actor, newpos)
-    }
-}
 mycanvas.addEventListener("click", (ev) => {
     const bound = mycanvas.getBoundingClientRect() 
     const x = ev.clientX - bound.left
